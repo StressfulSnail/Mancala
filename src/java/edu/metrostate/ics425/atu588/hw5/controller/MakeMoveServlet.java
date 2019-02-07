@@ -1,0 +1,90 @@
+package edu.metrostate.ics425.atu588.hw5.controller;
+
+
+import edu.metrostate.ics425.atu588.hw5.model.InvalidMoveException;
+import edu.metrostate.ics425.atu588.hw5.model.MancalaBean;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ *
+ * @author adam
+ */
+public class MakeMoveServlet extends HttpServlet {
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        MancalaBean mb = (MancalaBean) request.getSession(true).getAttribute("game");
+        
+        String pit = request.getParameter("pit");
+        
+        if (pit != null) {
+            try {
+                int pitInt = Integer.parseInt(pit);
+                mb.makeMove(pitInt);
+            } catch (InvalidMoveException | NumberFormatException e) {
+                request.setAttribute("badMove", true);
+            }
+        } else {
+            request.setAttribute("badMove", true);
+        }
+        
+        if (!mb.isFinished()) {
+            request.getRequestDispatcher("/game.jsp").forward(request, response);
+        } else {
+            request.getRequestDispatcher("/gameOver").forward(request, response);
+        }
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+}

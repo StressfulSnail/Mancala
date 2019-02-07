@@ -1,0 +1,17 @@
+body {
+    text-align: center;
+    overflow: hidden;
+}
+
+h1, div {
+    margin-bottom: 5vh;
+}
+
+div {
+    font-size: large;
+}
+
+a {
+    text-decoration: none;
+    font-size: 2em;
+}
